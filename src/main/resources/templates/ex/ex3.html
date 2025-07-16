@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="https://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout1.html}" >
+
+<div layout:fragment="content">
+  <h1> 컨텐츠 부분입니다.</h1>
+  <h2> 나중에 이 부분이 변경되어 적용 됩니다.</h2>
+  <h3> layout1.html 의 content 부분이 이곳에 해당합니다.</h3>
+  <h2> 이곳을 Header로 활용할 수 있습니다.</h2>
+</div>
+<script layout:fragment="script" th:inline="javascript">
+const arr = [[${arr}]]
+console.log(arr)
+
+</script>

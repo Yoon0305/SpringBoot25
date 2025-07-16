@@ -27,6 +27,8 @@ dependencies {
     /* maven repository 에서 code 가져와서 refresh(코끼리 버튼)으로 가져온다 */
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'      /* 데이터 베이스 관련 외부 라이브러리*/
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'     /* 프론트 관련 외부 라이브러리*/
+    // https://mvnrepository.com/artifact/nz.net.ultraq.thymeleaf/thymeleaf-layout-dialect
+    implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.1.0'     /* thymeleaf layout 관련 외부 라이브러리*/
     implementation 'org.springframework.boot:spring-boot-starter-web'           /* string-web*/
     compileOnly 'org.projectlombok:lombok'                                      /* lombok*/
     annotationProcessor 'org.projectlombok:lombok'                              /* lombok*/
