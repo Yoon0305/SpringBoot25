@@ -21,9 +21,9 @@ spring.jpa.show-sql=true
 ======================== build.gradle ========================
 
 
- implementation 'org.springframework.boot:spring-boot-starter-data-jpa'      /* 데이터 베이스 관련 외부 라이브러리*/
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'      /* 데이터 베이스 관련 외부 라이브러리*/
 
- implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'     /* 프론트 관련 외부 라이브러리*/
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'     /* 프론트 관련 외부 라이브러리*/
  
     implementation 'org.springframework.boot:spring-boot-starter-web'           /* string-web*/
     
