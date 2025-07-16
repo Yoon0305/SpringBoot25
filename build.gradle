@@ -1,0 +1,46 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.4.7'
+    id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'org.mbc'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    /* maven repository 에서 code 가져와서 refresh(코끼리 버튼)으로 가져온다 */
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'      /* 데이터 베이스 관련 외부 라이브러리*/
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'     /* 프론트 관련 외부 라이브러리*/
+    implementation 'org.springframework.boot:spring-boot-starter-web'           /* string-web*/
+    compileOnly 'org.projectlombok:lombok'                                      /* lombok*/
+    annotationProcessor 'org.projectlombok:lombok'                              /* lombok*/
+    testCompileOnly 'org.projectlombok:lombok'                                  /* lombok*/
+    testAnnotationProcessor 'org.projectlombok:lombok'                          /* lombok*/
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'             /* boot dev-tool*/
+
+    /* 1단계, 2단계 설정 -> src/main/resources/application.properties 에서 설정   */
+
+    runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'                          /* maria db driver*/
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'      /* junit, method test*/
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'                /* junit launcher (junit 실행코드)*/
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}

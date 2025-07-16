@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>컨트롤러에서 넘어온 모델 처리</title>
+</head>
+<body>
+<div th:text="${list}">리스트로 넘어온 데이터 확인용
+  <hr><br>
+</div>
+<div th:text="${map}">맵(k,v)로 넘어온 데이터 확인용
+</div>
+<hr><br>
+<div th:text="${dto}">dto로 넘어온 데이터 확인용
+</div>
+<hr><br>
+
+<script th:inline="javascript"> /*타임리프의 자바 스크립트 선언 방식*/
+
+const list = [[${list}]] // 모델에서 넘어온 객체를 list변수에 넣음.
+const map = [[${map}]]
+const dto = [[${dto}]]
+
+//chrome console 출력용
+console.log(list)
+console.log(map)
+console.log(dto)
+
+</script>
+
+
+</body>
+</html>
