@@ -178,4 +178,122 @@ public class BoardRepositoryTests {
         //                  람다식 : 1개의 명령어가 있을 때 활용
     }
 
+    //QueryDSL 테스트 진행
+
+    @Test
+    public void testSearch1(){
+
+        Pageable pageable = PageRequest.of(1,10,Sort.by("bno").descending());
+
+         // boardRepository.search1(pageable); -> paging기법을 이용해서 title=1 값을 찾아오나?
+
+        Page<Board> result = boardRepository.search1(pageable);
+
+        result.getContent().forEach(board -> log.info(board));
+
+        //Hibernate: 검색조건이 1개일 때 (where이하 title절)
+        //    select
+        //        b1_0.bno,
+        //        b1_0.content,
+        //        b1_0.moddate,
+        //        b1_0.regdate,
+        //        b1_0.title,
+        //        b1_0.writer
+        //    from
+        //        board b1_0
+        //    where
+        //        b1_0.title like ? escape '!' -> like 1
+
+        
+        //Hibernate: 검색조건이 2개일 때 (where 이하 title, content) , booleanbuilder applied
+        //    select
+        //        b1_0.bno,
+        //        b1_0.content,
+        //        b1_0.moddate,
+        //        b1_0.regdate,
+        //        b1_0.title,
+        //        b1_0.writer 
+        //    from
+        //        board b1_0 
+        //    where
+        //        (
+        //            b1_0.title like ? escape '!' 
+        //            or b1_0.content like ? escape '!'
+        //        ) 
+        //        and b1_0.bno>?  -> query.where(board.bno.gt(0L)
+        //    order by
+        //        b1_0.bno desc 
+        //    limit               -> paging 처리  . this.getQuerydsl().applyPagination(pageable, query)
+        //        ?, ?
+        //Hibernate: 
+        //    select
+        //        count(b1_0.bno) 
+        //    from
+        //        board b1_0 
+        //    where
+        //        (
+        //            b1_0.title like ? escape '!' 
+        //            or b1_0.content like ? escape '!'
+        //        ) 
+        //        and b1_0.bno>?
+    }
+
+    @Test
+    public void testSearchAll(){
+        // front에서 t가 선택되면 title, c -> content, w -> writer
+
+        String[] types ={"t","w"}; // 검색 조건
+
+        String keyword = "10"; // 검색 단어
+
+        Pageable pageable = PageRequest.of(0,10,Sort.by("bno").descending());
+
+        Page<Board> result = boardRepository.searchAll(types, keyword, pageable);
+
+        // Hibernate:
+        //    select
+        //        b1_0.bno,
+        //        b1_0.content,
+        //        b1_0.moddate,
+        //        b1_0.regdate,
+        //        b1_0.title,
+        //        b1_0.writer
+        //    from
+        //        board b1_0
+        //    where
+        //        (
+        //            b1_0.title like ? escape '!'
+        //            or b1_0.content like ? escape '!'
+        //            or b1_0.writer like ? escape '!'
+        //        )
+        //        and b1_0.bno>?
+        //    order by
+        //        b1_0.bno desc
+        //    limit
+        //        ?, ?
+        //Hibernate:
+        //    select
+        //        count(b1_0.bno)
+        //    from
+        //        board b1_0
+        //    where
+        //        (
+        //            b1_0.title like ? escape '!'
+        //            or b1_0.content like ? escape '!'
+        //            or b1_0.writer like ? escape '!'
+        //        )
+        //        and b1_0.bno>?
+
+        log.info("total count: "+result.getTotalElements()); //99
+        log.info("total pages: "+result.getTotalPages());    //10
+        log.info("page number: "+result.getNumber());        //0
+        log.info("page size: "+result.getSize());            //10
+        log.info("next page exist: "+result.hasNext());      //true
+        log.info("start page exist: "+result.isFirst());     //true
+
+        result.getContent().forEach(board -> log.info(board));
+
+    }
+
+
 }// Class 종료
