@@ -4,6 +4,8 @@ package org.mbc.board.service;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.mbc.board.dto.BoardDTO;
+import org.mbc.board.dto.PageRequestDTO;
+import org.mbc.board.dto.PageResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -50,6 +52,21 @@ public class BoardServiceTests {
                 .build();
         boardService.modify(boardDTO); // front에서 객체가 넘어가 수정이 되었는지 테스트
 
+    }
+
+    @Test
+    public void testList() {
+        // front에서 넘어오는 데이터를 이용해서 paging과 검색과 정렬 처리 용
+        PageRequestDTO pageRequestDTO = PageRequestDTO.builder()
+                .type("tcw") // 제목 내용 작성자 중에
+                .keyword("1") // 1이 들어간걸 찾는다
+                .page(1) // 현재 페이지는 1
+                .size(10) // 10개씩 보여달라
+                .build();
+
+        PageResponseDTO<BoardDTO> responseDTO = boardService.list(pageRequestDTO);
+
+        log.info(responseDTO);
     }
 
 }

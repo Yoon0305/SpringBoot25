@@ -4,12 +4,18 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.mbc.board.domain.Board;
 import org.mbc.board.dto.BoardDTO;
+import org.mbc.board.dto.PageRequestDTO;
+import org.mbc.board.dto.PageResponseDTO;
 import org.mbc.board.repository.BoardRepository;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -68,5 +74,30 @@ public class BoardServiceImpl implements BoardService {
         // delete from board where bno = bno
 
 
+    }
+
+    @Override // 리스트 페이지 요청에 온 값을 응답을 보낸다 (페이징 처리)
+    public PageResponseDTO<BoardDTO> list(PageRequestDTO pageRequestDTO) {
+        // pageRequestDTO에서 넘어온 값을 처리하고 PageResponseDTO로 보내야 한다.
+
+        String[] types = pageRequestDTO.getTypes(); // front에 넘어온 type t,c,w 처리
+        String keyword = pageRequestDTO.getKeyword(); // front에서 넘어온 keyword 검색 처리
+        Pageable pageable = pageRequestDTO.getPageable("bno"); // 프론트에서 넘어온 bno를 이용한 정렬 처리용
+        // return PageRequest.of(this.page-1 , this.size, Sort.by(props).descending());
+
+        // Page<Board> -> List<BoardDTO> 변환하고 리턴 되어야 한다.
+        Page<Board> result = boardRepository.searchAll(types, keyword, pageable);
+        // test 에서 시행했던 코드
+
+        List<BoardDTO> dtoList = result.getContent().stream()
+                .map(board -> modelMapper.map(board,BoardDTO.class))
+                .collect(Collectors.toList());
+        // Entity를 DTO로 변환시키는 코드 (ModelMapper이용)
+
+        return PageResponseDTO.<BoardDTO>withAll()
+                .pageRequestDTO(pageRequestDTO)
+                .dtoList(dtoList)
+                .total((int)result.getTotalElements())
+                .build(); // Builder 패턴 리턴
     }
 }
